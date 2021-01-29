@@ -5,14 +5,11 @@ from flask_restful import reqparse, abort, Api, Resource
 app = Flask(__name__)
 api = Api(app)
 
-db = pymysql.connect(
-        user = 'root',
-        passwd = '',
-        host = '127.0.0.1',
-        port = 3306,
-        db = 'sun',
-        charset = 'utf8'
-    )
+app.secret_key = 'sample_secret'
+
+
+db = pymysql.connect(host='localhost', user = 'root', passwd = '', db = 'userlist', charset='utf8')
+
 cursor = db.cursor()
 
 
@@ -100,6 +97,32 @@ class BoardArticle(Resource):
         
         return jsonify(status = "success", result = {"id": args["id"]})
         
+
+"""
+User APIs : 유저 SignUp / Login / Logout
+
+SignUp API : *fullname*, *email*, *password* 을 입력받아 새로운 유저를 가입시킵니다.
+Login API : *email*, *password* 를 입력받아 특정 유저로 로그인합니다.
+Logout API : 현재 로그인 된 유저를 로그아웃합니다.
+"""
+
+# session을 위한 secret_key 설정
+app.config.from_mapping(SECRET_KEY='dev')
+
+@app.route('/auth/register', methods=('GET', 'POST'))
+def register():
+    return None
+
+
+@app.route('/auth/login', methods=('GET', 'POST'))
+def login():
+    return None
+
+
+@app.route('/auth/logout')
+def logout():
+    return None
+
 
 
 # API Resource 라우팅을 등록!
