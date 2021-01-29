@@ -8,7 +8,7 @@ api = Api(app)
 app.secret_key = 'sample_secret'
 
 
-db = pymysql.connect(host='localhost', user = 'root', passwd = '', db = 'userlist', charset='utf8')
+db = pymysql.connect(host='localhost', user = 'root', passwd = '', db = 'backendproject', charset='utf8')
 
 cursor = db.cursor()
 
