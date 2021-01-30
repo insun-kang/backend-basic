@@ -1,5 +1,5 @@
 import pymysql
-from flask import Flask, jsonify, request, render_template, redirect, session
+from flask import Flask, jsonify, request, render_template, redirect, session, url_for
 from flask_restful import reqparse, abort, Api, Resource
 
 
@@ -93,7 +93,7 @@ class BoardArticle(Resource):
     def delete(self, board_id=None, board_article_id=None):
         args = parser.parse_args()
         sql = "DELETE FROM `boardArticle` WHERE `id` = %s"
-        cursor.execute(sql, (args["id"], ))
+        cursor.execute(sql, (args["id"]))
         db.commit()
         
         return jsonify(status = "success", result = {"id": args["id"]})
@@ -112,33 +112,46 @@ app.config.from_mapping(SECRET_KEY='dev')
 
 @app.route('/')
 def home():
-
     return render_template('index.html')
 
    
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    return render_template('register.html')
+    if request.method=='POST':
+        fullname=request.form['fullname']
+        email=request.form['email']
+        pw=request.form['pw']
+        sql = "INSERT INTO member (fullname,    email, pw) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (fullname, email, pw))
+        db.commit()
+   
+        return redirect(request.url)
+    return render_template('index.html')
+
+
 
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
- 
-    return render_template('login.html')
-@app.route('/login_proc', methods=['POST'])
-def login_proc():
-    if request.method=='POST':
-        userid=request.form['id']
-        userpw=request.form['pw']
-        if len(userid)==0 or len(userpw)==0:
-            return '다시 입력하세요'
+    if request.method =='POST':
+        email=request.form['email']
+        pw=request.form['pw']
+
+        sql = "SELECT * FROM member WHERE email=%s"
+        rows_count=cursor.execute(sql, email)
+
+        if rows_count >0:
+            user_info=cursor.fetchone()
+
+            if pw==user_info[3]:
+                return '로그인 성공'
+            else:
+                return'비밀번호가 틀렸습니다.'
         else:
-            session['logFlag']=True
-            session['userid']=userid
-            return render_template('login_proc.html')
-    else:
-        return '잘못된 접근입니다.'
+            return '회원이 아닙니다.'
+    return render_template('index.html')
+
 
 
 @app.route('/logout')
