@@ -1,6 +1,7 @@
 import pymysql
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, render_template, redirect, session
 from flask_restful import reqparse, abort, Api, Resource
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -109,17 +110,38 @@ Logout API : 현재 로그인 된 유저를 로그아웃합니다.
 # session을 위한 secret_key 설정
 app.config.from_mapping(SECRET_KEY='dev')
 
-@app.route('/auth/register', methods=('GET', 'POST'))
+@app.route('/')
+def home():
+
+    return render_template('index.html')
+
+   
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return None
+    return render_template('register.html')
 
 
-@app.route('/auth/login', methods=('GET', 'POST'))
+@app.route('/login', methods=('GET', 'POST'))
 def login():
-    return None
+ 
+    return render_template('login.html')
+@app.route('/login_proc', methods=['POST'])
+def login_proc():
+    if request.method=='POST':
+        userid=request.form['id']
+        userpw=request.form['pw']
+        if len(userid)==0 or len(userpw)==0:
+            return '다시 입력하세요'
+        else:
+            session['logFlag']=True
+            session['userid']=userid
+            return render_template('login_proc.html')
+    else:
+        return '잘못된 접근입니다.'
 
 
-@app.route('/auth/logout')
+@app.route('/logout')
 def logout():
     return None
 
