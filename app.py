@@ -159,13 +159,14 @@ def login():
 def form():
     if 'email' in session:
         return redirect(url_for('board'))
-    return render_template('index.html')
+    return redirect(url_for('board'))
 
 
-@app.route('/logout') 
+@app.route('/logout', methods=('GET', 'POST')) 
 def logout():
-    session.pop('user', None)
-    return redirect(url_for('form'))
+    if request.method =='POST':
+        session.pop('email', None)
+        return redirect(url_for('/form'))
 
 
 
