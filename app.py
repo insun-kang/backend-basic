@@ -145,18 +145,29 @@ def login():
             user_info=cursor.fetchone()
 
             if pw==user_info[3]:
-                return '로그인 성공'
+                session['email']=email
+                return ''' <script> alert("안녕하세요~ {}님"); location.href="/form" </script> '''.format(email)
+
+
             else:
                 return'비밀번호가 틀렸습니다.'
         else:
             return '회원이 아닙니다.'
     return render_template('index.html')
 
+@app.route('/form')
+def form():
+    if 'email' in session:
+        return redirect(url_for('board'))
+    return render_template('index.html')
 
 
-@app.route('/logout')
+@app.route('/logout') 
 def logout():
-    return None
+    session.pop('user', None)
+    return redirect(url_for('form'))
+
+
 
 
 
