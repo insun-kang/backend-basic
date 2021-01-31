@@ -122,7 +122,7 @@ def register():
         fullname=request.form['fullname']
         email=request.form['email']
         pw=request.form['pw']
-        sql = "INSERT INTO member (fullname,    email, pw) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO member (fullname, email, pw) VALUES (%s, %s, %s)"
         cursor.execute(sql, (fullname, email, pw))
         db.commit()
    
@@ -165,7 +165,7 @@ def form():
 @app.route('/logout') 
 def logout():  
     session.pop('email', None)
-    return redirect('/')
+    return ''' <script> alert("로그아웃 되었습니다."); location.href="/" </script> '''
 
 
 
