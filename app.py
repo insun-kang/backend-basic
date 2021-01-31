@@ -162,11 +162,10 @@ def form():
     return redirect(url_for('board'))
 
 
-@app.route('/logout', methods=('GET', 'POST')) 
-def logout():
-    if request.method =='POST':
-        session.pop('email', None)
-        return redirect('/')
+@app.route('/logout') 
+def logout():  
+    session.pop('email', None)
+    return redirect('/')
 
 
 
