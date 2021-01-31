@@ -166,7 +166,7 @@ def form():
 def logout():
     if request.method =='POST':
         session.pop('email', None)
-        return redirect(url_for('/form'))
+        return redirect('/')
 
 
 
