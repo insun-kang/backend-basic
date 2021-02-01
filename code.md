@@ -1,5 +1,26 @@
+## USER API
 
-##code
+- register 
+  - fullname, email, pw로부터 받은 값을 db에 저장
+
+- login
+  - email, pw를 db에서 찾아 일치하는지 여부를 판단하고 session에 값을 저장 후 board 페이지로 넘어감
+  - email, pw가 불일치 할 때는 '회원이 아닙니다.', pw가 불일치 할 때는 '비밀번호가 다릅니다.'를 출력시켰습니다.
+  - 로그인이 성공했을 시에는 환영 메시지와 함께 board페이지로 넘어가게 됩니다.
+
+- logout
+  - 세션값을 비워줌으로써 login해제
+  - 로그아웃 성공시 '로그아웃 했습니다.'메시지 출력
+
+## board, boardArticle
+
+-수업시간에 했던 내용을 사용했습니다...
+
+## code(user api)
+
+
+index.html을 만들어서 그 안에 register, login, logout을 실행 할 수 있게 만들었습니다.
+
 
 ```
 import pymysql
@@ -18,97 +39,12 @@ db = pymysql.connect(host='localhost', user = 'root', passwd = '', db = 'backend
 cursor = db.cursor()
 
 
-parser = reqparse.RequestParser()
-parser.add_argument('id')
-parser.add_argument('name')
 
-
-class Board(Resource):
-    def get(self):
-        sql = "SELECT id, name FROM `board`"
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        return jsonify(status = "success", result = result)
-        
-    
-    def post(self):
-        args = parser.parse_args()
-        sql = "INSERT INTO `board` (`name`) VALUES (%s)"
-        cursor.execute(sql, (args['name']))
-        db.commit()
-        
-        return jsonify(status = "success", result = {"name": args["name"]})
-        
-    def put(self):
-        args = parser.parse_args()
-        sql = "UPDATE `board` SET name = %s WHERE `id` = %s"
-        cursor.execute(sql, (args['name'], args["id"]))
-        db.commit()
-        
-        return jsonify(status = "success", result = {"id": args["id"], "name": args["name"]})
-    
-    
-    def delete(self):
-        args = parser.parse_args()
-        sql = "DELETE FROM `board` WHERE `id` = %s"
-        cursor.execute(sql, (args["id"], ))
-        db.commit()
-        
-        return jsonify(status = "success", result = {"id": args["id"]})
-
-
-parser.add_argument('id')
-parser.add_argument('title')
-parser.add_argument('content')
-parser.add_argument('board_id')
-
-
-class BoardArticle(Resource):
-    def get(self, board_id=None, board_article_id=None):
-        if board_article_id:
-            sql = "SELECT id, title, content FROM `boardArticle` WHERE `id`=%s"
-            cursor.execute(sql, (board_article_id,))
-            result = cursor.fetchone()
-        else:
-            sql = "SELECT id, title, content FROM `boardArticle` WHERE `board_id`=%s"
-            cursor.execute(sql, (board_id,))
-            result = cursor.fetchall()
-            
-        return jsonify(status = "success", result = result)
-
-    def post(self, board_id=None):
-        args = parser.parse_args()
-        sql = "INSERT INTO `boardArticle` (`title`, `content`, `board_id`) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (args['title'], args['content'], args['board_id']))
-        db.commit()
-        
-        return jsonify(status = "success", result = {"title": args["title"]})
-        
-        
-    def put(self, board_id=None, board_article_id=None):
-        args = parser.parse_args()
-        sql = "UPDATE `boardArticle` SET title = %s, content = %s WHERE `id` = %s"
-        cursor.execute(sql, (args['title'], args["content"], args["id"]))
-        db.commit()
-        
-        return jsonify(status = "success", result = {"title": args["title"], "content": args["content"]})
-        
-        
-    def delete(self, board_id=None, board_article_id=None):
-        args = parser.parse_args()
-        sql = "DELETE FROM `boardArticle` WHERE `id` = %s"
-        cursor.execute(sql, (args["id"]))
-        db.commit()
-        
-        return jsonify(status = "success", result = {"id": args["id"]})
         
 
 """
 User APIs : 유저 SignUp / Login / Logout
 
-SignUp API : *fullname*, *email*, *password* 을 입력받아 새로운 유저를 가입시킵니다.
-Login API : *email*, *password* 를 입력받아 특정 유저로 로그인합니다.
-Logout API : 현재 로그인 된 유저를 로그아웃합니다.
 """
 
 # session을 위한 secret_key 설정
