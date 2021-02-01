@@ -16,6 +16,26 @@
 
 -수업시간에 했던 내용을 사용했습니다...
 
+
+
+#사진
+-
+![title](/image/index화면.png)
+초기화면
+-
+![title](/image/로그인 성공.png)
+로그인 성공시 화면
+-
+![title](/image/로그아웃.png)
+로그아웃 성공시 화면
+-
+![title](/image/board화면.png)
+로그인 후 board에 저장된 내용표시
+-
+![title](/image/회원가입.png)
+회원가입 후 db에 저장된 데이터
+-
+
 ## code(user api)
 
 
@@ -117,3 +137,4 @@ api.add_resource(BoardArticle, '/board/<board_id>', '/board/<board_id>/<board_ar
 if __name__ == '__main__':
     app.run()
 ```
+
