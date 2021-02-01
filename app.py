@@ -8,7 +8,6 @@ api = Api(app)
 
 app.secret_key = 'sample_secret'
 
-
 db = pymysql.connect(host='localhost', user = 'root', passwd = '', db = 'backendproject', charset='utf8')
 
 cursor = db.cursor()
@@ -114,9 +113,7 @@ app.config.from_mapping(SECRET_KEY='dev')
 def home():
     return render_template('index.html')
 
-   
-
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method=='POST':
         fullname=request.form['fullname']
@@ -128,8 +125,6 @@ def register():
    
         return redirect(request.url)
     return render_template('index.html')
-
-
 
 
 @app.route('/login', methods=('GET', 'POST'))
@@ -178,3 +173,4 @@ api.add_resource(BoardArticle, '/board/<board_id>', '/board/<board_id>/<board_ar
 
 if __name__ == '__main__':
     app.run()
+
